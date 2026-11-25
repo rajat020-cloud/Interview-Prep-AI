@@ -95,9 +95,20 @@ app.use("/api/saved-questions", savedQuestionRouter)
 app.use("/api/analytics", analyticsRouter)
 app.use("/api/notifications", notificationRouter)
 
+// Request logging for serverless observability
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} (original: ${req.originalUrl})`)
+    next()
+})
+
 // Root health ping
-app.get("/", (req, res) => {
-    res.json({ message: "Interview Prep AI Backend API is active and running." })
+app.get(["/", "/api", "/api/health"], (req, res) => {
+    res.json({
+        status: "online",
+        message: "Interview Prep AI Backend API is active and running.",
+        environment: process.env.NODE_ENV || "development",
+        timestamp: new Date().toISOString()
+    })
 })
 
 // 8. Centralized 404 handler

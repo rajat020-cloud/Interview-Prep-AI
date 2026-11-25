@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// Ensure dist directory exists for Vercel
+// Ensure dist directory exists for environments expecting an outputDirectory
 const distDir = path.join(__dirname, 'dist');
 if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });
@@ -14,20 +14,32 @@ if (fs.existsSync(srcDir)) {
     fs.cpSync(srcDir, distSrcDir, { recursive: true });
 }
 
-// Create clean serverless entrypoints that export Express app without blocking port listeners
-const entryContent = `const app = require("./src/app");\nmodule.exports = app;\n`;
+// Copy package.json to dist so package resolution works in dist
+const pkgPath = path.join(__dirname, 'package.json');
+if (fs.existsSync(pkgPath)) {
+    fs.copyFileSync(pkgPath, path.join(distDir, 'package.json'));
+}
+
+// Copy vercel.json if exists
+const vercelPath = path.join(__dirname, 'vercel.json');
+if (fs.existsSync(vercelPath)) {
+    fs.copyFileSync(vercelPath, path.join(distDir, 'vercel.json'));
+}
+
+// Serverless entrypoints
+const entryContent = `require("dotenv").config();\nconst app = require("./src/app");\nmodule.exports = app;\n`;
 fs.writeFileSync(path.join(distDir, 'index.js'), entryContent);
 fs.writeFileSync(path.join(distDir, 'server.js'), entryContent);
 fs.writeFileSync(path.join(distDir, 'app.js'), entryContent);
 
-// Also create dist/api/index.js for /api rewrites
+// Dist API folder
 const distApiDir = path.join(distDir, 'api');
 if (!fs.existsSync(distApiDir)) {
     fs.mkdirSync(distApiDir, { recursive: true });
 }
 fs.writeFileSync(
     path.join(distApiDir, 'index.js'),
-    `const app = require("../src/app");\nmodule.exports = app;\n`
+    `require("dotenv").config();\nconst app = require("../src/app");\nmodule.exports = app;\n`
 );
 
-console.log('✅ Build successful: All serverless entrypoints generated in dist/');
+console.log('✅ Build successful: Serverless entrypoints generated.');

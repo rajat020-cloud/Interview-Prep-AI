@@ -3,13 +3,8 @@ const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
 const fs = require('fs')
 
-// Lazy load puppeteer to avoid crashing Vercel Serverless Functions
+// Puppeteer is loaded on-demand only (not at top level to ensure zero serverless overhead)
 let puppeteer = null
-try {
-    puppeteer = require("puppeteer")
-} catch (e) {
-    // Expected in serverless environments
-}
 
 // Initialize Google GenAI client if key exists
 const apiKey = process.env.GOOGLE_GENAI_API_KEY || ""
