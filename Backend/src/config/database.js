@@ -1,28 +1,46 @@
 const mongoose = require("mongoose")
 
-let isConnecting = false
+// Global connection caching across serverless invocations (Vercel Node.js functions)
+let cached = global.mongooseConnection
+if (!cached) {
+    cached = global.mongooseConnection = { conn: null, promise: null }
+}
 
 async function connectToDB() {
-    if (mongoose.connection.readyState === 1 || isConnecting) return
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection
+    }
 
-    isConnecting = true
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 5000,
+    if (cached.conn) {
+        return cached.conn
+    }
+
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 8000,
+            maxPoolSize: 10
+        }).then((mongooseInstance) => {
+            console.log("Connected to MongoDB Database")
+            return mongooseInstance
+        }).catch(err => {
+            cached.promise = null
+            console.warn("MongoDB connection attempt:", err.message)
+            throw err
         })
-        console.log("Connected to MongoDB Database")
-        isConnecting = false
-    } catch (err) {
-        isConnecting = false
-        console.warn("MongoDB connection failed (waiting for Atlas IP whitelist):", err.message.slice(0, 100))
-        // Automatically retry connecting every 5 seconds until Atlas accepts connection
-        setTimeout(connectToDB, 5000)
+    }
+
+    try {
+        cached.conn = await cached.promise
+        return cached.conn
+    } catch (e) {
+        cached.promise = null
+        throw e
     }
 }
 
 mongoose.connection.on("disconnected", () => {
-    console.warn("MongoDB disconnected. Attempting reconnect in 5s...")
-    setTimeout(connectToDB, 5000)
+    cached.conn = null
+    cached.promise = null
 })
 
 module.exports = connectToDB

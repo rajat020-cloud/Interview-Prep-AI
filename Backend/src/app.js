@@ -58,6 +58,18 @@ app.use(express.json({ limit: "10mb" }))
 app.use(express.urlencoded({ extended: true, limit: "10mb" }))
 app.use(cookieParser())
 
+// 5.1 Auto-connect to DB for Vercel Serverless Function invocations
+const connectToDB = require("./config/database")
+app.use(async (req, res, next) => {
+    try {
+        await connectToDB()
+        next()
+    } catch (err) {
+        console.warn("DB Connection check:", err.message)
+        next()
+    }
+})
+
 // 6. Require all routes
 const healthRouter = require("./routes/health.routes")
 const authRouter = require("./routes/auth.routes")
