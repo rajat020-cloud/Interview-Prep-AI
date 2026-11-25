@@ -32,6 +32,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "Software Engineer"
     },
+    role: {
+        type: String,
+        enum: ["user", "admin", "super_admin", "moderator", "support"],
+        default: "user",
+        index: true
+    },
+    status: {
+        type: String,
+        enum: ["active", "suspended"],
+        default: "active",
+        index: true
+    },
+    plan: {
+        type: String,
+        enum: ["free", "pro", "premium"],
+        default: "free"
+    },
+    adminPermissions: {
+        type: [String],
+        default: []
+    },
+    lastLoginAt: {
+        type: Date,
+        default: Date.now
+    },
     streak: {
         type: Number,
         default: 1

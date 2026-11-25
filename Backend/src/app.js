@@ -67,10 +67,12 @@ const codingRouter = require("./routes/codingPractice.routes")
 const savedQuestionRouter = require("./routes/savedQuestion.routes")
 const analyticsRouter = require("./routes/analytics.routes")
 const notificationRouter = require("./routes/notification.routes")
+const adminRouter = require("./routes/admin.routes")
 
 // 7. Mount routes
 app.use("/api/health", healthRouter)
 app.use("/api/auth", authRouter)
+app.use("/api/admin", adminRouter)
 app.use("/api/interview", interviewRouter)
 app.use("/api/mock", mockRouter)
 app.use("/api/coding", codingRouter)
