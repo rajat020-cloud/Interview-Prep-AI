@@ -20,6 +20,7 @@ app.use(helmet({
 const allowedOrigins = process.env.FRONTEND_URLS ? process.env.FRONTEND_URLS.split(",") : [
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://interview-prep-ai-taupe.vercel.app",
     "https://interview-ready-ai-wheat.vercel.app"
 ]
 
