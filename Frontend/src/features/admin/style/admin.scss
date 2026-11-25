@@ -90,6 +90,26 @@ $color-info: #3B82F6;
         gap: 12px;
         border-bottom: 1px solid $border-subtle;
 
+        .brand-badge-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #0D0716;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+            flex-shrink: 0;
+
+            .sidebar-logo-img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
         .brand-badge {
             width: 38px;
             height: 38px;

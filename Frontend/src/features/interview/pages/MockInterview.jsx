@@ -22,6 +22,35 @@ import {
 } from 'lucide-react'
 import '../style/mock.scss'
 
+const ROLE_PRESETS = [
+    { title: 'Full-Stack Developer', domain: 'Engineering', icon: '💻', company: 'Tech Innovators' },
+    { title: 'Sales Executive (SDR / BDR)', domain: 'Sales', icon: '💼', company: 'SaaS Enterprise' },
+    { title: 'Data & Business Analyst', domain: 'Analyst', icon: '📊', company: 'Global Analytics Corp' },
+    { title: 'Business Development Manager', domain: 'Business Dev', icon: '🤝', company: 'Strategic Growth Partners' },
+    { title: 'Frontend Engineer', domain: 'Developer', icon: '⚡', company: 'Digital Products Lab' },
+    { title: 'Product Manager (PM)', domain: 'Product', icon: '🚀', company: 'Product Studio' }
+]
+
+const getDomainBadge = (currentRole) => {
+    const r = (currentRole || '').toLowerCase()
+    if (r.includes('sale') || r.includes('account executive') || r.includes('sdr') || r.includes('bdr') || r.includes('revenue')) {
+        return { label: 'Sales & Revenue Engine', icon: '💼', desc: 'Evaluates deal qualification, MEDDIC frameworks, objection handling, pitch clarity, and pipeline closing.' }
+    }
+    if (r.includes('analyst') || r.includes('analytics') || r.includes('bi ') || r.includes('business intelligence') || r.includes('data science')) {
+        return { label: 'Data & Analytics Engine', icon: '📊', desc: 'Evaluates SQL problem solving, metric definitions, statistical rigor, dashboarding, and business storytelling.' }
+    }
+    if (r.includes('business development') || r.includes('biz dev') || r.includes('partnership') || r.includes('growth')) {
+        return { label: 'Business Development Engine', icon: '🤝', desc: 'Evaluates partnership deal structures, market expansion strategy, client acquisition, and commercial negotiation.' }
+    }
+    if (r.includes('product manager') || r.includes('project manager') || r.includes('program manager')) {
+        return { label: 'Product & Leadership Engine', icon: '🚀', desc: 'Evaluates product discovery, roadmap prioritization (RICE), metric definition, and cross-functional alignment.' }
+    }
+    if (r.includes('engineer') || r.includes('developer') || r.includes('coder') || r.includes('software') || r.includes('frontend') || r.includes('backend') || r.includes('fullstack') || r.includes('devops')) {
+        return { label: 'Software Engineering Engine', icon: '💻', desc: 'Evaluates system architecture, framework internals, algorithmic trade-offs, state management, and edge cases.' }
+    }
+    return { label: 'Specialized Role Engine', icon: '🎯', desc: 'Adapts dynamically to the specific core competencies and responsibilities of this professional role.' }
+}
+
 const MockInterview = () => {
     const { startMockInterview, submitMockAnswer } = useInterview()
 
@@ -289,17 +318,52 @@ const MockInterview = () => {
 
                         <div className="setup-form">
                             <h3>Configure Your Interview Session</h3>
-                            <p>Choose your target role and difficulty. When started, your camera will turn on and the interviewer will speak questions aloud.</p>
+                            <p>Choose your target role and difficulty. The AI interviewer adapts dynamically with role-specific questions and evaluates according to professional domain standards.</p>
+
+                            {/* Role Category Presets */}
+                            <div className="role-presets-container">
+                                <label className="presets-label">Select Target Role Track or Enter Custom Below:</label>
+                                <div className="role-presets-grid">
+                                    {ROLE_PRESETS.map((preset) => (
+                                        <button
+                                            key={preset.title}
+                                            type="button"
+                                            className={`preset-chip ${role === preset.title ? 'preset-chip--active' : ''}`}
+                                            onClick={() => {
+                                                setRole(preset.title)
+                                                setCompany(preset.company)
+                                            }}
+                                        >
+                                            <span className="preset-icon">{preset.icon}</span>
+                                            <span className="preset-title">{preset.title}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Adaptive Engine Banner */}
+                            {(() => {
+                                const domainInfo = getDomainBadge(role)
+                                return (
+                                    <div className="domain-engine-banner">
+                                        <div className="banner-top">
+                                            <span className="banner-icon">{domainInfo.icon}</span>
+                                            <strong className="banner-title">{domainInfo.label}</strong>
+                                        </div>
+                                        <p className="banner-desc">{domainInfo.desc}</p>
+                                    </div>
+                                )
+                            })()}
 
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label>Target Role</label>
+                                    <label>Target Role (Customizable)</label>
                                     <input
                                         type="text"
                                         className="input"
                                         value={role}
                                         onChange={e => setRole(e.target.value)}
-                                        placeholder="e.g. Full-Stack Developer"
+                                        placeholder="e.g. Sales Executive, Data Analyst, BDM..."
                                     />
                                 </div>
                                 <div className="form-group">
@@ -309,7 +373,7 @@ const MockInterview = () => {
                                         className="input"
                                         value={company}
                                         onChange={e => setCompany(e.target.value)}
-                                        placeholder="e.g. AVBT Technologies"
+                                        placeholder="e.g. AVBT Technologies, Salesforce, Google..."
                                     />
                                 </div>
                             </div>

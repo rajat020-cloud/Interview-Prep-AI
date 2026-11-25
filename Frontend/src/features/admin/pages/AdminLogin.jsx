@@ -77,20 +77,26 @@ export default function AdminLogin() {
                 position: "relative",
                 zIndex: 1
             }}>
-                {/* Header Icon */}
+                {/* Header Brand Logo */}
                 <div style={{ textAlign: "center", marginBottom: "28px" }}>
                     <div style={{
-                        width: "56px",
-                        height: "56px",
+                        width: "68px",
+                        height: "68px",
                         margin: "0 auto 16px",
-                        borderRadius: "14px",
-                        background: "linear-gradient(135deg, #A855F7, #D946EF)",
+                        borderRadius: "16px",
+                        background: "#0D0716",
+                        border: "1px solid rgba(168, 85, 247, 0.4)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 0 24px rgba(168, 85, 247, 0.5)"
+                        padding: "6px",
+                        boxShadow: "0 0 28px rgba(168, 85, 247, 0.4)"
                     }}>
-                        <ShieldCheck size={32} color="#FFFFFF" />
+                        <img
+                            src="/logo-icon.png"
+                            alt="Interview Prep AI Logo"
+                            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        />
                     </div>
                     <span style={{
                         fontSize: "11px",

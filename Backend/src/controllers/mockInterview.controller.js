@@ -9,18 +9,41 @@ const notificationModel = require("../models/notification.model")
 
 const TOTAL_QUESTIONS = 10
 
+function getIntroductionQuestion(role = "Software Engineer", company = "our company") {
+    const r = role.toLowerCase();
+    if (r.includes("sale") || r.includes("account executive") || r.includes("revenue") || r.includes("sdr") || r.includes("bdr")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, walk me through your sales experience, your approach to prospecting and closing deals, and a key quota or revenue target you achieved.`;
+    }
+    if (r.includes("analyst") || r.includes("analytics") || r.includes("bi ") || r.includes("business intelligence") || r.includes("data science")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, your experience with data analysis and BI tools (such as SQL, Excel, Python, or Tableau), and an example of how your analysis influenced a business decision.`;
+    }
+    if (r.includes("business development") || r.includes("biz dev") || r.includes("partnership") || r.includes("growth")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, your background in identifying business opportunities, and how you develop strategic partnerships and client pipelines.`;
+    }
+    if (r.includes("product manager") || r.includes("program manager") || r.includes("project manager")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, your experience leading product or project lifecycles, and how you prioritize features and align cross-functional teams.`;
+    }
+    if (r.includes("market") || r.includes("seo") || r.includes("content")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, summarize your experience managing growth and marketing campaigns, and highlight a campaign that delivered measurable results.`;
+    }
+    if (r.includes("engineer") || r.includes("developer") || r.includes("coder") || r.includes("software") || r.includes("frontend") || r.includes("backend") || r.includes("fullstack") || r.includes("devops")) {
+        return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, tell me about your technical background, key systems or projects you have built, and the core technologies you're most proficient with.`;
+    }
+    return `Welcome to your interview for the ${role} position at ${company}. To get started, please introduce yourself, summarize your relevant professional background, and share what makes you an excellent fit for this role.`;
+}
+
 /**
  * Start a new mock interview session:
- * Question 1 is ALWAYS the candidate introduction.
+ * Question 1 is ALWAYS the candidate introduction tailored to the target role domain.
  * Follow-up questions (2-10) will be generated tailored to their introduction!
  */
 async function startMockInterviewController(req, res) {
     try {
         const { role = "Software Engineer", company = "Tech Company", difficulty = "Medium", durationMinutes = 20 } = req.body
 
-        // First question is always the introduction
+        // First question is always the introduction tailored to the role
         const introQuestion = {
-            questionText: `Welcome to your interview for the ${role} position at ${company || 'our company'}. To get started, please introduce yourself, tell me about your background, the key projects you've built, and the technologies you're most confident with.`,
+            questionText: getIntroductionQuestion(role, company || 'our company'),
             type: "behavioral",
             difficulty: "Easy"
         }

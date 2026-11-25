@@ -35,8 +35,8 @@ export default function AdminSidebar({ isOpen, setIsOpen }) {
         <aside className={`admin-sidebar ${isOpen ? "open" : "collapsed"}`}>
             {/* Header Brand */}
             <div className="sidebar-brand">
-                <div className="brand-badge">
-                    <ShieldCheck size={22} className="shield-icon" />
+                <div className="brand-badge-logo">
+                    <img src="/logo-icon.png" alt="Interview Prep AI" className="sidebar-logo-img" />
                 </div>
                 <div className="brand-text">
                     <span className="platform-title">Interview Prep AI</span>

@@ -137,6 +137,30 @@ Instructions:
 // 2. MOCK INTERVIEW GENERATOR & EVALUATOR
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Helper to categorize job roles into specialized interview domains
+function getRoleDomain(role = "") {
+    const r = role.toLowerCase();
+    if (r.includes("sale") || r.includes("account executive") || r.includes("revenue") || r.includes("sdr") || r.includes("bdr")) {
+        return "sales";
+    }
+    if (r.includes("analyst") || r.includes("analytics") || r.includes("bi ") || r.includes("business intelligence") || r.includes("data science") || r.includes("data scientist")) {
+        return "analyst";
+    }
+    if (r.includes("business development") || r.includes("biz dev") || r.includes("partnership") || r.includes("growth")) {
+        return "business_development";
+    }
+    if (r.includes("product manager") || r.includes("program manager") || r.includes("scrum") || r.includes("project manager")) {
+        return "product_management";
+    }
+    if (r.includes("market") || r.includes("seo") || r.includes("content") || r.includes("copywriter")) {
+        return "marketing";
+    }
+    if (r.includes("engineer") || r.includes("developer") || r.includes("coder") || r.includes("software") || r.includes("frontend") || r.includes("backend") || r.includes("fullstack") || r.includes("full-stack") || r.includes("devops") || r.includes("cloud") || r.includes("qa") || r.includes("sre") || r.includes("architect")) {
+        return "engineering";
+    }
+    return "general";
+}
+
 const mockQuestionSchema = z.object({
     questionText: z.string(),
     type: z.enum(["technical", "behavioral"]),
@@ -145,7 +169,20 @@ const mockQuestionSchema = z.object({
 })
 
 async function generateMockQuestion({ role, company, difficulty, type, previousQuestions = [] }) {
+    const domain = getRoleDomain(role);
+    const domainGuidance = {
+        sales: "Focus on prospecting, client objection handling, value proposition, pipeline closing, or sales metrics.",
+        analyst: "Focus on data querying (SQL), interpreting statistical anomalies, data validation, metrics dashboards, or business storytelling.",
+        business_development: "Focus on strategic partnership outreach, deal structuring, market expansion, revenue sharing, or negotiation.",
+        product_management: "Focus on product discovery, user empathy, roadmap prioritization (RICE), metric definition, or sprint trade-offs.",
+        marketing: "Focus on CAC/ROAS, funnel optimization, conversion attribution, SEO/SEM strategies, or brand positioning.",
+        engineering: "Focus on software architecture, clean code, algorithmic efficiency, system scaling, API contracts, or database design.",
+        general: "Focus on core functional competency, domain problem solving, and professional execution."
+    }[domain];
+
     const prompt = `Generate a realistic, high-signal ${difficulty} ${type} interview question for a candidate applying for the position of "${role}" at "${company}".
+Role Domain: ${domain.toUpperCase()}.
+Domain Guidance: ${domainGuidance}
 ${previousQuestions.length > 0 ? `Do not repeat or overlap with these existing questions: ${previousQuestions.join(" | ")}` : ""}
 Provide a clear, engaging scenario or question.`
 
@@ -162,9 +199,10 @@ const mockQuestionsBatchSchema = z.object({
 })
 
 async function generateMockQuestionsBatch({ role, company, difficulty, count = 5 }) {
-    const prompt = `Generate a progressive set of ${count} realistic interview questions for a candidate applying for "${role}" at "${company || 'Tech Company'}".
+    const domain = getRoleDomain(role);
+    const prompt = `Generate a progressive set of ${count} realistic interview questions tailored specifically for "${role}" in the ${domain.toUpperCase()} domain at "${company || 'Tech Company'}".
 Difficulty: ${difficulty}.
-Include 3 focused technical questions and 2 behavioral questions.
+Ensure the questions reflect genuine ${role} responsibilities (e.g., domain technical/functional challenges and situational behavioral cases).
 Ensure questions are clear, practical, and interview-ready.`
 
     const raw = await callGemini(prompt, mockQuestionsBatchSchema, "gemini-flash-lite-latest")
@@ -173,21 +211,59 @@ Ensure questions are clear, practical, and interview-ready.`
 }
 
 async function generateTailoredQuestionsFromIntro({ candidateIntro, role, company, difficulty, count = 9 }) {
-    const prompt = `You are an expert technical interviewer conducting a comprehensive multi-round interview for "${role}" at "${company || 'Tech Company'}".
-Difficulty Level: ${difficulty}
+    const domain = getRoleDomain(role);
+
+    let domainSpecificInstructions = "";
+    if (domain === "sales") {
+        domainSpecificInstructions = `
+- Questions 1-2: Dig into the specific sales achievements, quota targets, sales cycles, and deal sizes mentioned in their introduction.
+- Questions 3-6: High-stakes sales scenarios: qualifying complex enterprise prospects (MEDDIC/BANT), navigating price resistance, handling aggressive competitors, and pipeline velocity.
+- Questions 7-9: Behavioral STAR situations (e.g. dealing with a lost major deal, turning around an unpromising quarter, collaborating with marketing or engineering to close a customer).`;
+    } else if (domain === "analyst") {
+        domainSpecificInstructions = `
+- Questions 1-2: Probe the data tools, SQL queries, statistical models, and BI reporting dashboards mentioned in their introduction.
+- Questions 3-6: Real-world analytical scenarios: resolving conflicting KPI definitions, diagnosing a 20% sudden drop in conversion, database schema aggregation, and explaining complex metrics to non-analytical executives.
+- Questions 7-9: Behavioral STAR situations (e.g. tight deadlines for executive board presentations, managing messy incomplete data, persuading leadership to act on analytical findings).`;
+    } else if (domain === "business_development") {
+        domainSpecificInstructions = `
+- Questions 1-2: Probe the strategic partnerships, market expansion wins, and commercial relationships mentioned in their introduction.
+- Questions 3-6: Deal structuring scenarios: drafting win-win revenue splits, evaluating new channel partner opportunities, pitching new business, and handling contractual impasses.
+- Questions 7-9: Behavioral STAR situations (e.g. salvaging an unaligned partnership, cross-functional persuasion with legal/product teams, prioritizing growth opportunities).`;
+    } else if (domain === "product_management") {
+        domainSpecificInstructions = `
+- Questions 1-2: Probe the product lifecycle, user research, and key feature launches highlighted in their introduction.
+- Questions 3-6: Product trade-offs: prioritizing conflicting customer requests, defining North Star metrics, managing technical debt vs new features, and A/B test failure retrospectives.
+- Questions 7-9: Behavioral STAR situations (e.g. saying no to executive requests, resolving engineering disagreements on scope, launching under incomplete data).`;
+    } else if (domain === "marketing") {
+        domainSpecificInstructions = `
+- Questions 1-2: Probe the campaigns, channels, ROAS/CAC numbers, and growth metrics cited in their introduction.
+- Questions 3-6: Marketing execution scenarios: optimizing underperforming paid funnels, scaling organic reach, brand positioning against an incumbent, and multi-touch attribution.
+- Questions 7-9: Behavioral STAR situations (e.g. handling a PR crisis, rapid marketing budget cuts, collaborating with sales on lead quality).`;
+    } else if (domain === "engineering") {
+        domainSpecificInstructions = `
+- Questions 1-2: Probe the system architecture, component design, and framework decisions of the projects mentioned in their introduction.
+- Questions 3-6: Technical scenarios: concurrency, database indexing, caching strategies, API resiliency, error boundaries, and security best practices.
+- Questions 7-9: Behavioral STAR situations (e.g. mitigating production outages, resolving heated code reviews, refactoring legacy systems under tight deadlines).`;
+    } else {
+        domainSpecificInstructions = `
+- Questions 1-2: Explore the professional background, core responsibilities, and projects detailed in their introduction.
+- Questions 3-6: In-depth functional scenarios and industry-standard challenges appropriate for a ${role}.
+- Questions 7-9: Behavioral STAR situations (e.g. conflict resolution, working under ambiguity, exceeding performance expectations).`;
+    }
+
+    const prompt = `You are an expert interviewer conducting a comprehensive multi-round interview for "${role}" at "${company || 'our company'}".
+Domain: ${domain.toUpperCase()} | Difficulty Level: ${difficulty}
 
 The candidate just provided their self-introduction:
 """
 ${candidateIntro}
 """
 
-Based directly on the background, projects, programming languages, libraries, and tools the candidate mentioned:
+Based DIRECTLY on the background, tools, achievements, and responsibilities the candidate explicitly shared in their introduction:
 Generate exactly ${count} tailored, progressive interview questions:
-- Question 1-2: Probe the architecture and technical decisions of the projects they explicitly mentioned in their intro.
-- Question 3-6: High-signal technical and coding scenario questions on the tech stack and core CS topics they claimed familiarity with.
-- Question 7-9: Behavioral STAR situations (e.g., handling production incidents, challenging code reviews, collaboration under tight deadlines).
+${domainSpecificInstructions}
 
-Ensure every question feels personalized, directly connected to their intro, and realistic for a ${role}.`
+Ensure every single question is directly relevant to "${role}", sounds natural and professional, and builds directly on their spoken background.`;
 
     const raw = await callGemini(prompt, mockQuestionsBatchSchema, "gemini-flash-lite-latest")
     const parsed = JSON.parse(raw)
