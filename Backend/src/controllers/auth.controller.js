@@ -77,6 +77,9 @@ async function registerUserController(req, res) {
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
+                role: user.role,
+                status: user.status,
+                plan: user.plan,
                 targetRole: user.targetRole,
                 streak: user.streak,
                 preferences: user.preferences
@@ -137,13 +140,26 @@ async function loginUserController(req, res) {
             maxAge: 24 * 60 * 60 * 1000
         })
 
+        if (["super_admin", "admin", "moderator", "support"].includes(user.role)) {
+            res.cookie("admin_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 24 * 60 * 60 * 1000
+            })
+        }
+
         return res.status(200).json({
             message: "User logged in successfully",
+            token,
             user: {
                 id: user._id,
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
+                role: user.role,
+                status: user.status,
+                plan: user.plan,
                 targetRole: user.targetRole,
                 streak: user.streak,
                 preferences: user.preferences
@@ -195,6 +211,9 @@ async function getMeController(req, res) {
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
+                role: user.role,
+                status: user.status,
+                plan: user.plan,
                 targetRole: user.targetRole,
                 streak: user.streak,
                 preferences: user.preferences
@@ -230,6 +249,9 @@ async function updateProfileController(req, res) {
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
+                role: user.role,
+                status: user.status,
+                plan: user.plan,
                 targetRole: user.targetRole,
                 streak: user.streak,
                 preferences: user.preferences

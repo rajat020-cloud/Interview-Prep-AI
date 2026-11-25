@@ -33,7 +33,11 @@ const Login = () => {
 
         const res = await handleLogin({ email, password })
         if (res.success) {
-            navigate('/')
+            if (res.user?.role === 'super_admin' || res.user?.role === 'admin') {
+                navigate('/admin/dashboard')
+            } else {
+                navigate('/')
+            }
         } else {
             setError(res.error || 'Invalid credentials. Please try again.')
         }
@@ -91,6 +95,21 @@ const Login = () => {
                     <div className="form-header">
                         <h2>Welcome Back 👋</h2>
                         <p>Sign in to continue to Interview Prep AI</p>
+                    </div>
+
+                    {/* Mode Selector */}
+                    <div className="auth-mode-selector">
+                        <button type="button" className="mode-tab active">
+                            Candidate Portal
+                        </button>
+                        <button
+                            type="button"
+                            className="mode-tab"
+                            onClick={() => navigate('/admin/login')}
+                        >
+                            <ShieldCheck size={14} />
+                            Admin Console
+                        </button>
                     </div>
 
                     {error && (
@@ -182,6 +201,17 @@ const Login = () => {
                     <div className="auth-footer-link">
                         <span>Don't have an account? </span>
                         <Link to="/register">Sign Up</Link>
+                    </div>
+
+                    {/* Dedicated Admin Portal Link */}
+                    <div className="admin-login-cta">
+                        <div className="admin-cta-left">
+                            <ShieldCheck size={16} color="#D946EF" />
+                            <span>Staff / Administrative Access?</span>
+                        </div>
+                        <Link to="/admin/login" className="admin-cta-btn">
+                            Admin Login →
+                        </Link>
                     </div>
                 </div>
             </div>

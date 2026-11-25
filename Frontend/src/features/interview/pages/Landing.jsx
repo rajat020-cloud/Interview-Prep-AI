@@ -15,7 +15,8 @@ import {
     ChevronDown,
     Laptop,
     Video,
-    Volume2
+    Volume2,
+    Shield
 } from 'lucide-react'
 import './landing.scss'
 
@@ -62,6 +63,9 @@ const Landing = () => {
                     </nav>
 
                     <div className="nav-actions">
+                        <Link to="/admin/login" className="btn btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#D946EF" }}>
+                            <Shield size={14} /> Admin
+                        </Link>
                         <Link to="/login" className="btn btn-ghost">Log In</Link>
                         <Link to="/register" className="btn btn-primary get-started-btn">
                             Get Started

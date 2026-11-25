@@ -17,7 +17,8 @@ import {
     Sparkles,
     Menu,
     X,
-    User
+    User,
+    ShieldCheck
 } from 'lucide-react'
 import './layout.scss'
 
@@ -119,6 +120,31 @@ const Layout = () => {
                         )
                     })}
                 </nav>
+
+                {/* Admin Console Switcher if user is an admin */}
+                {(user?.role === 'admin' || user?.role === 'super_admin') && (
+                    <div style={{ padding: "0 16px 12px" }}>
+                        <a
+                            href="/admin/dashboard"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                padding: "8px 12px",
+                                borderRadius: "8px",
+                                background: "linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(217, 70, 239, 0.15))",
+                                border: "1px solid rgba(168, 85, 247, 0.35)",
+                                color: "#E9B8FF",
+                                textDecoration: "none",
+                                fontSize: "12.5px",
+                                fontWeight: 600
+                            }}
+                        >
+                            <ShieldCheck size={16} color="#D946EF" />
+                            <span>Switch to Admin Panel →</span>
+                        </a>
+                    </div>
+                )}
 
                 {/* User Profile Pill at Bottom */}
                 <div className="sidebar__footer">
