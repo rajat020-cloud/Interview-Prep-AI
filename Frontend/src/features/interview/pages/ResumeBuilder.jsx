@@ -18,18 +18,21 @@ import {
     Award,
     Code,
     RefreshCw,
-    AlertCircle
+    AlertCircle,
+    Mail,
+    Phone,
+    MapPin
 } from 'lucide-react'
 import '../style/resumebuilder.scss'
 
 const TEMPLATES = [
-    { id: 'harvard', name: 'Harvard Clean (ATS 100%)', desc: 'Standard single-column serif format preferred by top recruiters and ATS scanners.' },
-    { id: 'modern', name: 'Modern Tech Two-Column', desc: 'Sleek two-column layout highlighting technical proficiencies and project achievements.' },
-    { id: 'executive', name: 'Executive Minimalist', desc: 'Crisp horizontal dividers, elegant typography, and focused leadership bullet points.' },
-    { id: 'compact', name: 'Developer Compact', desc: 'High-density tech resume designed to fit comprehensive engineering achievements into one page.' }
+    { id: 'harvard', name: 'Harvard Clean (ATS 100%)', desc: 'Single-column standard with sharp divider lines, preferred by top tech recruiters and ATS parsers.' },
+    { id: 'modern', name: 'Modern Tech (Two-Column)', desc: 'Professional two-column layout highlighting technical proficiencies, skills sidebar, and project achievements.' },
+    { id: 'executive', name: 'Executive Minimalist', desc: 'Swiss typography, elegant left accent bars, and focused engineering leadership highlights.' },
+    { id: 'compact', name: 'Developer Compact (1-Page)', desc: 'High-density Silicon Valley format designed to fit comprehensive engineering achievements cleanly onto one page.' }
 ]
 
-// Default genuine profile data for Rajat Katnoria
+// Genuine profile data matching Rajat Katnoria's resume
 const DEFAULT_RESUME_DATA = {
     fullName: "Rajat Katnoria",
     title: "Full-Stack Developer",
@@ -38,67 +41,83 @@ const DEFAULT_RESUME_DATA = {
     location: "Punjab, India",
     linkedin: "linkedin.com/in/rajatkatnoria",
     github: "github.com/rajat020-cloud",
-    summary: "Driven Full-Stack Developer with hands-on experience building production-grade web applications, RESTful APIs, and scalable automation systems. Proficient in React.js, Next.js, Node.js, Express, and MongoDB, with a strong foundation in Data Structures, Algorithms, and clean architecture.",
+    summary: "Software Engineering undergraduate with strong foundations in Data Structures, Algorithms, Object-Oriented Programming, DBMS, Operating Systems, and Computer Networks. Experienced in full-stack development, backend engineering, RESTful APIs, authentication, and database management. Hands-on experience building web applications, integrating third-party APIs, and developing automated customer communication workflows.",
     skills: {
-        languages: "C, C++, Java, JavaScript (ES6+), SQL, Python",
-        frameworks: "React.js, Next.js, Node.js, Express.js, SCSS, Tailwind CSS",
-        databases: "MongoDB, MySQL, Firebase",
-        tools: "Git, GitHub, Postman, REST APIs, WhatsApp CRM Pipelines",
-        coreCS: "Data Structures & Algorithms (DSA), OOP, DBMS, Computer Networks"
+        languages: "C, C++, Java, JavaScript, SQL, Python",
+        coreCS: "DSA, OOP, DBMS, Operating Systems, Computer Networks",
+        backend: "Node.js, Express.js, REST APIs, Authentication, API Debugging",
+        frontend: "React.js, Next.js, Component-Based Architecture, UI Development, SCSS",
+        databases: "MongoDB, Firebase, MySQL, SQL",
+        tools: "Meta WhatsApp APIs, Postman, Git, GitHub, VS Code, Render, Vercel"
     },
     experiences: [
         {
             role: "Full-Stack Developer",
             company: "AVBT Technologies",
-            period: "Oct 2024 – Present",
+            period: "October 2026 – Present",
             location: "Mohali, India",
             points: [
-                "Engineered responsive full-stack applications using Next.js, React, Node.js, and MongoDB, improving client page load speed by 35%.",
-                "Built and integrated custom WhatsApp CRM pipelines with automated webhook listeners and customer engagement workflows.",
-                "Designed and documented secure RESTful endpoints featuring JWT role-based access control and input validation.",
-                "Collaborated with cross-functional teams to deliver production releases on tight deployment schedules."
+                "Contributing to Prajnaa Market's e-commerce storefront, improving page layouts and user-facing shopping workflows.",
+                "Developed a WhatsApp CRM solution to manage customer information, orders, and automated communication workflows.",
+                "Integrated Meta WhatsApp APIs to enable automated messaging workflows and reusable customer communication templates.",
+                "Implemented backend integration between storefront checkout and CRM, synchronizing customer details, delivery addresses, cart items, and payment methods.",
+                "Configured automated WhatsApp notifications for order-related customer updates."
             ]
         }
     ],
     projects: [
         {
-            title: "Interview Prep AI (AI Interview & Prep Platform)",
-            tech: "React 19, Node.js, Express, MongoDB, Gemini AI",
+            title: "AI Learning Platform (Interview Prep AI)",
+            tech: "Next.js, Node.js, Express, MongoDB, Gemini API, Firebase",
             points: [
-                "Architected an AI-powered interview preparation suite with Gemini API fallback, multi-language DSA runner, and live camera feed.",
-                "Implemented browser-native speech synthesis and speech-to-text dictation for realistic mock interview practice.",
-                "Optimized database schemas with Mongoose indexes, reducing query response times across user interview sessions."
-            ]
-        },
-        {
-            title: "WhatsApp CRM & Lead Automation Platform",
-            tech: "Node.js, Express.js, MongoDB, WhatsApp Cloud API",
-            points: [
-                "Developed an enterprise CRM dashboard managing 10,000+ customer conversations with automated conversational triggers.",
-                "Reduced customer support response latency by 50% via automated query classification and real-time alerts."
+                "Developed a full-stack learning platform with a Next.js frontend and modular backend workflows.",
+                "Built backend functionality using Node.js and Express.js with RESTful APIs for authentication and user management.",
+                "Integrated Firebase Authentication to support secure user authentication.",
+                "Integrated MongoDB and Gemini API to provide AI-assisted learning responses and structured content delivery.",
+                "Organized reusable application components to improve maintainability and deployed on Vercel."
             ]
         },
         {
             title: "University Management System",
             tech: "React.js, Node.js, Express.js, MySQL",
             points: [
-                "Designed an academic record management platform managing course enrollments, grade calculations, and student attendance.",
-                "Implemented relational database normalization to maintain data integrity across thousands of student records."
+                "Engineered a role-based platform for students, faculty, and administrators.",
+                "Implemented JWT authentication and RBAC, placement notifications, and section-wise enrollment groups.",
+                "Designed and tested 12+ RESTful APIs for academic records, resume analysis, and student support using Postman.",
+                "Structured backend logic and database interactions for secure and efficient data handling."
+            ]
+        },
+        {
+            title: "Team Task Manager",
+            tech: "React.js, Node.js, Express.js, MongoDB",
+            points: [
+                "Built a task management platform with secure authentication and role-based access control.",
+                "Implemented project management, task assignment, status tracking, and overdue monitoring dashboards.",
+                "Developed validated RESTful APIs and deployed frontend on Vercel and backend on Render."
+            ]
+        },
+        {
+            title: "Online Voting System",
+            tech: "React.js, CSS3",
+            points: [
+                "Built a responsive voting application using reusable UI components and dynamic state management.",
+                "Implemented input validation and duplicate-vote prevention to support data consistency."
             ]
         }
     ],
     education: [
         {
-            degree: "Bachelor of Engineering in Computer Science & Engineering",
-            institution: "Chitkara University, Punjab",
+            degree: "B.E. in Computer Science & Engineering",
+            institution: "Chitkara University, Himachal Pradesh",
             period: "2023 – 2027",
             score: "CGPA: 8.7 / 10"
         }
     ],
     certifications: [
-        "Cisco Networking Academy: Modern AI & Applied AI Concepts",
-        "Nutanix Hybrid Cloud Fundamentals",
-        "Infosys Springboard: Core Java & Web Technologies"
+        "Fitness Head and Drill Instructor in the NSS core team; coordinated team activities and execution.",
+        "Managed Unity March participant data using MS Excel under the My Bharat initiative; received Certificate of Appreciation from the Ministry of Youth Affairs.",
+        "Cisco Networking Academy: Introduction to Modern AI, Applied AI; Nutanix: Hybrid Cloud Fundamentals.",
+        "Infosys Springboard: C, C++, Design Thinking; NSS 7-Day Special Camp Participation Certificate."
     ]
 }
 
@@ -113,61 +132,56 @@ const ResumeBuilder = () => {
 
     // Calculate real ATS score based on resume content
     const calculateAtsScore = () => {
-        let score = 50
+        let score = 55
         const checks = []
 
         // Contact info completeness
         const hasEmail = Boolean(resumeData.email && resumeData.email.includes('@'))
         const hasPhone = Boolean(resumeData.phone && resumeData.phone.length > 8)
-        const hasLinkedIn = Boolean(resumeData.linkedin)
-        const hasGitHub = Boolean(resumeData.github)
+        const hasGithub = Boolean(resumeData.github)
+        const hasLinkedin = Boolean(resumeData.linkedin)
 
-        if (hasEmail && hasPhone && hasLinkedIn) {
-            score += 15
-            checks.push({ text: "Complete contact info (Email, Phone, LinkedIn)", pass: true })
-        } else {
-            checks.push({ text: "Add complete contact info including LinkedIn and Phone", pass: false })
-        }
-
-        // Action verbs check
-        const allText = JSON.stringify(resumeData).toLowerCase()
-        const actionVerbs = ['engineered', 'developed', 'architected', 'built', 'optimized', 'designed', 'implemented', 'reduced', 'improved', 'scaled']
-        const matchedVerbs = actionVerbs.filter(v => allText.includes(v))
-
-        if (matchedVerbs.length >= 4) {
-            score += 15
-            checks.push({ text: `Strong action verbs detected (${matchedVerbs.length} verbs)`, pass: true })
-        } else {
-            checks.push({ text: "Include more strong action verbs (Engineered, Designed, Scaled)", pass: false })
-        }
-
-        // Metrics and numbers check
-        const hasNumbers = /\d+%|\d+k|\d+\+/.test(allText)
-        if (hasNumbers) {
+        if (hasEmail && hasPhone) {
             score += 10
-            checks.push({ text: "Measurable impact & percentage metrics included", pass: true })
+            checks.push({ text: "Complete Contact Information (Phone, Email)", pass: true })
         } else {
-            checks.push({ text: "Add quantified results (e.g., 35% speed improvement)", pass: false })
+            checks.push({ text: "Incomplete Contact Info", pass: false })
         }
 
-        // Core Skills check
-        const hasSkills = resumeData.skills.languages && resumeData.skills.frameworks
-        if (hasSkills) {
+        if (hasGithub && hasLinkedin) {
             score += 10
-            checks.push({ text: "Comprehensive technical skills breakdown", pass: true })
+            checks.push({ text: "Professional Profiles Present (GitHub, LinkedIn)", pass: true })
+        } else {
+            checks.push({ text: "Missing professional profiles", pass: false })
         }
 
-        return { score: Math.min(score, 98), checks }
+        // Summary Check
+        if (resumeData.summary && resumeData.summary.length > 100) {
+            score += 10
+            checks.push({ text: "Strong Keyword-Rich Professional Summary", pass: true })
+        } else {
+            checks.push({ text: "Summary too short for ATS keyword match", pass: false })
+        }
+
+        // Skills Check
+        if (resumeData.skills.languages && resumeData.skills.backend) {
+            score += 10
+            checks.push({ text: "Structured Technical Skills Matrix", pass: true })
+        } else {
+            checks.push({ text: "Add more programming languages & frameworks", pass: false })
+        }
+
+        // Experience & Projects
+        if (resumeData.experiences.length > 0 && resumeData.projects.length >= 2) {
+            score += 5
+            checks.push({ text: "Quantifiable Experience & Project Bullets", pass: true })
+        }
+
+        return { score: Math.min(100, score), checks }
     }
 
     const { score: atsScore, checks: atsChecks } = calculateAtsScore()
 
-    // Print / Save as PDF
-    const handlePrint = () => {
-        window.print()
-    }
-
-    // Copy formatted plain text for job applications
     const handleCopyPlainText = () => {
         const text = `
 ${resumeData.fullName}
@@ -175,25 +189,27 @@ ${resumeData.title}
 ${resumeData.email} | ${resumeData.phone} | ${resumeData.location}
 LinkedIn: ${resumeData.linkedin} | GitHub: ${resumeData.github}
 
-SUMMARY
+PROFESSIONAL SUMMARY
 ${resumeData.summary}
 
 TECHNICAL SKILLS
-Languages: ${resumeData.skills.languages}
-Frameworks: ${resumeData.skills.frameworks}
-Databases: ${resumeData.skills.databases}
-Tools: ${resumeData.skills.tools}
+- Languages: ${resumeData.skills.languages}
+- Core CS: ${resumeData.skills.coreCS}
+- Backend: ${resumeData.skills.backend}
+- Frontend: ${resumeData.skills.frontend}
+- Databases: ${resumeData.skills.databases}
+- Tools: ${resumeData.skills.tools}
 
 EXPERIENCE
 ${resumeData.experiences.map(e => `${e.role} - ${e.company} (${e.period})\n${e.points.map(p => `• ${p}`).join('\n')}`).join('\n\n')}
 
 PROJECTS
-${resumeData.projects.map(p => `${p.title} (${p.tech})\n${p.points.map(pt => `• ${pt}`).join('\n')}`).join('\n\n')}
+${resumeData.projects.map(p => `${p.title} [${p.tech}]\n${p.points.map(pt => `• ${pt}`).join('\n')}`).join('\n\n')}
 
 EDUCATION
-${resumeData.education.map(ed => `${ed.degree} - ${ed.institution} (${ed.period}) [${ed.score}]`).join('\n')}
+${resumeData.education.map(ed => `${ed.degree} - ${ed.institution} (${ed.period}) - ${ed.score}`).join('\n')}
 
-CERTIFICATIONS
+CERTIFICATIONS & LEADERSHIP
 ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
         `.trim()
 
@@ -202,20 +218,24 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
         setTimeout(() => setCopied(false), 2000)
     }
 
+    const handlePrint = () => {
+        window.print()
+    }
+
     return (
         <div className="resume-builder-page">
             <header className="page-header-row no-print">
                 <div>
                     <h1>AI Resume Builder &amp; ATS Optimizer</h1>
-                    <p>Build and customize a recruiter-vetted, ATS-friendly resume formatted with genuine engineering credentials.</p>
+                    <p>Create, customize, and export executive, ATS-compliant resumes tailored for engineering roles.</p>
                 </div>
                 <div className="header-action-buttons">
                     <button
-                        className={`btn ${isEditing ? 'btn-primary' : 'btn-ghost'}`}
+                        className="btn btn-secondary"
                         onClick={() => setIsEditing(!isEditing)}
                     >
                         {isEditing ? <Eye size={16} /> : <Edit3 size={16} />}
-                        {isEditing ? "View Live Resume" : "Edit Content"}
+                        {isEditing ? "View Live Preview" : "Edit Content"}
                     </button>
                     <button
                         className="btn btn-ghost"
@@ -237,7 +257,7 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
             <div className="resume-builder-grid">
                 {/* Left: Template Selector & ATS Guide */}
                 <div className="template-picker-col no-print">
-                    <h3>Select Resume Layout</h3>
+                    <h3>Select Resume Format</h3>
                     <div className="templates-list">
                         {TEMPLATES.map(tmpl => (
                             <div
@@ -265,9 +285,9 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                     <div className="ats-tips-card">
                         <h4><ShieldCheck size={16} className="text-success" /> ATS Best Practices</h4>
                         <ul>
-                            <li>Single column format parses cleanly into any applicant tracking system.</li>
-                            <li>Include standard headings: Summary, Skills, Experience, Education.</li>
-                            <li>Lead bullet points with quantifiable action verbs.</li>
+                            <li>Standard single-column format parses 100% cleanly into greenhouse, lever, and workday.</li>
+                            <li>Lead bullet points with active action verbs (Engineered, Developed, Architected).</li>
+                            <li>Include exact match technical keywords in the technical skills matrix.</li>
                         </ul>
                     </div>
                 </div>
@@ -276,7 +296,7 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                 <div className="resume-live-preview-col">
                     {isEditing ? (
                         <div className="resume-editor-form-card no-print">
-                            <h3>Edit Resume Details</h3>
+                            <h3>Edit Resume Content</h3>
                             <div className="form-grid-2">
                                 <div className="form-group">
                                     <label>Full Name</label>
@@ -330,7 +350,7 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
 
                             <div className="form-grid-2">
                                 <div className="form-group">
-                                    <label>LinkedIn URL</label>
+                                    <label>LinkedIn Profile</label>
                                     <input
                                         type="text"
                                         className="input"
@@ -339,7 +359,7 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label>GitHub URL</label>
+                                    <label>GitHub Profile</label>
                                     <input
                                         type="text"
                                         className="input"
@@ -373,14 +393,40 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                             </div>
 
                             <div className="form-group">
-                                <label>Frameworks &amp; Web Technologies</label>
+                                <label>Core Computer Science</label>
                                 <input
                                     type="text"
                                     className="input"
-                                    value={resumeData.skills.frameworks}
+                                    value={resumeData.skills.coreCS}
                                     onChange={e => setResumeData({
                                         ...resumeData,
-                                        skills: { ...resumeData.skills, frameworks: e.target.value }
+                                        skills: { ...resumeData.skills, coreCS: e.target.value }
+                                    })}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Backend Development</label>
+                                <input
+                                    type="text"
+                                    className="input"
+                                    value={resumeData.skills.backend}
+                                    onChange={e => setResumeData({
+                                        ...resumeData,
+                                        skills: { ...resumeData.skills, backend: e.target.value }
+                                    })}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Frontend Development</label>
+                                <input
+                                    type="text"
+                                    className="input"
+                                    value={resumeData.skills.frontend}
+                                    onChange={e => setResumeData({
+                                        ...resumeData,
+                                        skills: { ...resumeData.skills, frontend: e.target.value }
                                     })}
                                 />
                             </div>
@@ -392,8 +438,127 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                 Save &amp; Preview
                             </button>
                         </div>
+                    ) : selectedTemplate === 'modern' ? (
+                        /* Modern Two-Column Layout */
+                        <div className="resume-sheet resume-sheet--modern" id="printable-resume-sheet">
+                            <div className="modern-header">
+                                <div className="name-block">
+                                    <h1 className="candidate-name">{resumeData.fullName}</h1>
+                                    <p className="candidate-headline">{resumeData.title}</p>
+                                </div>
+                                <div className="modern-contact-pills">
+                                    <span>{resumeData.email}</span> &bull; 
+                                    <span>{resumeData.phone}</span> &bull; 
+                                    <span>{resumeData.location}</span>
+                                </div>
+                            </div>
+
+                            <div className="modern-body-layout">
+                                <aside className="modern-sidebar">
+                                    <div className="sidebar-section">
+                                        <h3 className="sidebar-heading">Profiles</h3>
+                                        <div className="sidebar-links">
+                                            <div>{resumeData.linkedin}</div>
+                                            <div>{resumeData.github}</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="sidebar-section">
+                                        <h3 className="sidebar-heading">Technical Skills</h3>
+                                        <div className="skill-cat-block">
+                                            <strong>Languages</strong>
+                                            <p>{resumeData.skills.languages}</p>
+                                        </div>
+                                        <div className="skill-cat-block">
+                                            <strong>Core CS</strong>
+                                            <p>{resumeData.skills.coreCS}</p>
+                                        </div>
+                                        <div className="skill-cat-block">
+                                            <strong>Backend</strong>
+                                            <p>{resumeData.skills.backend}</p>
+                                        </div>
+                                        <div className="skill-cat-block">
+                                            <strong>Frontend</strong>
+                                            <p>{resumeData.skills.frontend}</p>
+                                        </div>
+                                        <div className="skill-cat-block">
+                                            <strong>Databases</strong>
+                                            <p>{resumeData.skills.databases}</p>
+                                        </div>
+                                        <div className="skill-cat-block">
+                                            <strong>APIs &amp; Tools</strong>
+                                            <p>{resumeData.skills.tools}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="sidebar-section">
+                                        <h3 className="sidebar-heading">Education</h3>
+                                        {resumeData.education.map((edu, i) => (
+                                            <div key={i} className="sidebar-edu">
+                                                <strong>{edu.degree}</strong>
+                                                <div className="edu-inst">{edu.institution}</div>
+                                                <div className="edu-date">{edu.period}</div>
+                                                <div className="edu-cgpa">{edu.score}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="sidebar-section">
+                                        <h3 className="sidebar-heading">Certifications</h3>
+                                        <ul className="sidebar-bullet-list">
+                                            {resumeData.certifications.map((cert, i) => (
+                                                <li key={i}>{cert}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </aside>
+
+                                <main className="modern-main-content">
+                                    <div className="modern-content-section">
+                                        <h2 className="section-title">Professional Summary</h2>
+                                        <p className="summary-paragraph">{resumeData.summary}</p>
+                                    </div>
+
+                                    <div className="modern-content-section">
+                                        <h2 className="section-title">Professional Experience</h2>
+                                        {resumeData.experiences.map((exp, i) => (
+                                            <div key={i} className="experience-entry">
+                                                <div className="entry-header-row">
+                                                    <div>
+                                                        <strong className="entry-role">{exp.role}</strong> &bull; <span className="entry-company">{exp.company}</span>
+                                                    </div>
+                                                    <span className="entry-period">{exp.period}</span>
+                                                </div>
+                                                <ul className="entry-bullets">
+                                                    {exp.points.map((pt, pIdx) => (
+                                                        <li key={pIdx}>{pt}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="modern-content-section">
+                                        <h2 className="section-title">Technical Projects</h2>
+                                        {resumeData.projects.map((proj, i) => (
+                                            <div key={i} className="project-entry">
+                                                <div className="entry-header-row">
+                                                    <strong className="entry-project-title">{proj.title}</strong>
+                                                    <span className="entry-tech-badge">{proj.tech}</span>
+                                                </div>
+                                                <ul className="entry-bullets">
+                                                    {proj.points.map((pt, pIdx) => (
+                                                        <li key={pIdx}>{pt}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
                     ) : (
-                        /* The Printable Resume Paper */
+                        /* Harvard Clean, Executive Minimalist, or Developer Compact */
                         <div className={`resume-sheet resume-sheet--${selectedTemplate}`} id="printable-resume-sheet">
                             {/* Header Section */}
                             <div className="resume-sheet-header">
@@ -419,19 +584,27 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                 <h2 className="section-title">Technical Skills</h2>
                                 <div className="skills-grid-table">
                                     <div className="skill-row">
-                                        <span className="skill-cat">Languages:</span>
+                                        <span className="skill-cat">Programming Languages:</span>
                                         <span className="skill-items">{resumeData.skills.languages}</span>
                                     </div>
                                     <div className="skill-row">
-                                        <span className="skill-cat">Web Frameworks:</span>
-                                        <span className="skill-items">{resumeData.skills.frameworks}</span>
+                                        <span className="skill-cat">Core Computer Science:</span>
+                                        <span className="skill-items">{resumeData.skills.coreCS}</span>
+                                    </div>
+                                    <div className="skill-row">
+                                        <span className="skill-cat">Backend Development:</span>
+                                        <span className="skill-items">{resumeData.skills.backend}</span>
+                                    </div>
+                                    <div className="skill-row">
+                                        <span className="skill-cat">Frontend Development:</span>
+                                        <span className="skill-items">{resumeData.skills.frontend}</span>
                                     </div>
                                     <div className="skill-row">
                                         <span className="skill-cat">Databases:</span>
                                         <span className="skill-items">{resumeData.skills.databases}</span>
                                     </div>
                                     <div className="skill-row">
-                                        <span className="skill-cat">Developer Tools:</span>
+                                        <span className="skill-cat">APIs &amp; Developer Tools:</span>
                                         <span className="skill-items">{resumeData.skills.tools}</span>
                                     </div>
                                 </div>
@@ -444,7 +617,7 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                     <div key={i} className="experience-entry">
                                         <div className="entry-header-row">
                                             <div>
-                                                <strong className="entry-role">{exp.role}</strong> &bull; <span className="entry-company">{exp.company}</span>
+                                                <strong className="entry-role">{exp.role}</strong> | <span className="entry-company">{exp.company}</span>
                                             </div>
                                             <span className="entry-period">{exp.period}</span>
                                         </div>
@@ -491,9 +664,9 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                 ))}
                             </div>
 
-                            {/* Certifications */}
+                            {/* Leadership & Certifications */}
                             <div className="resume-sheet-section">
-                                <h2 className="section-title">Certifications &amp; Accreditations</h2>
+                                <h2 className="section-title">Leadership &amp; Certifications</h2>
                                 <ul className="cert-list">
                                     {resumeData.certifications.map((cert, i) => (
                                         <li key={i}>{cert}</li>
@@ -528,12 +701,12 @@ ${resumeData.certifications.map(c => `• ${c}`).join('\n')}
                                 <span className="stat-l">Optimal Length</span>
                             </div>
                             <div className="q-stat">
-                                <span className="stat-v">0 Tables</span>
-                                <span className="stat-l">Parse-Safe</span>
-                            </div>
-                            <div className="q-stat">
                                 <span className="stat-v">100%</span>
                                 <span className="stat-l">ATS Scannable</span>
+                            </div>
+                            <div className="q-stat">
+                                <span className="stat-v">0 Tables</span>
+                                <span className="stat-l">Parse Safe</span>
                             </div>
                         </div>
 

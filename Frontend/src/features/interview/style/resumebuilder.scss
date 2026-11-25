@@ -165,41 +165,220 @@
       min-height: 900px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-      /* Harvard Clean Variant */
+      /* Harvard Clean Variant - Classic Ivy League Standard */
       &--harvard {
         font-family: "Times New Roman", Times, Georgia, serif;
-        .candidate-name { font-family: "Times New Roman", Times, Georgia, serif; font-size: 26px; }
-        .section-title { font-family: "Times New Roman", Times, Georgia, serif; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; border-bottom: 1px solid #111; }
+        .candidate-name { font-family: "Times New Roman", Times, Georgia, serif; font-size: 26px; font-weight: 700; color: #000; }
+        .candidate-headline { font-family: "Times New Roman", Times, Georgia, serif; font-style: italic; color: #222; }
+        .section-title {
+          font-family: "Times New Roman", Times, Georgia, serif;
+          text-transform: uppercase;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          color: #000;
+          border-bottom: 1.5px solid #000;
+          padding-bottom: 2px;
+          margin-bottom: 6px;
+        }
+        .entry-role { font-family: "Times New Roman", Times, Georgia, serif; color: #000; font-weight: 700; }
+        .entry-bullets { color: #111; font-size: 12px; }
       }
 
-      /* Modern Tech Variant */
+      /* Modern Tech Two-Column Variant */
       &--modern {
-        .resume-sheet-header {
+        padding: 36px 40px;
+
+        .modern-header {
           border-bottom: 2px solid #6366f1;
+          padding-bottom: 14px;
+          margin-bottom: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+
+          .candidate-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+          }
+          .candidate-headline {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4f46e5;
+          }
+          .modern-contact-pills {
+            font-size: 11px;
+            color: #64748b;
+            text-align: right;
+          }
         }
-        .section-title {
-          color: #4f46e5;
-          border-bottom-color: #e0e7ff;
+
+        .modern-body-layout {
+          display: grid;
+          grid-template-columns: 240px 1fr;
+          gap: 24px;
+
+          .modern-sidebar {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .sidebar-heading {
+              font-size: 11.5px;
+              font-weight: 800;
+              text-transform: uppercase;
+              color: #4338ca;
+              letter-spacing: 0.05em;
+              border-bottom: 1.5px solid #cbd5e1;
+              padding-bottom: 3px;
+              margin-bottom: 8px;
+            }
+
+            .sidebar-links {
+              font-size: 11px;
+              color: #475569;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              word-break: break-all;
+            }
+
+            .skill-cat-block {
+              margin-bottom: 8px;
+              font-size: 11px;
+              strong { color: #0f172a; display: block; margin-bottom: 1px; }
+              p { color: #475569; line-height: 1.4; }
+            }
+
+            .sidebar-edu {
+              font-size: 11px;
+              margin-bottom: 8px;
+              strong { color: #0f172a; display: block; }
+              .edu-inst { color: #334155; }
+              .edu-date { color: #64748b; font-size: 10px; }
+              .edu-cgpa { color: #166534; font-weight: 700; margin-top: 2px; }
+            }
+
+            .sidebar-bullet-list {
+              padding-left: 14px;
+              font-size: 10.5px;
+              color: #475569;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+            }
+          }
+
+          .modern-main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .section-title {
+              font-size: 13px;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.05em;
+              color: #1e293b;
+              border-bottom: 2px solid #e2e8f0;
+              padding-bottom: 3px;
+              margin-bottom: 8px;
+            }
+          }
         }
       }
 
-      /* Executive Minimalist */
+      /* Executive Minimalist - Clean Leadership Style */
       &--executive {
+        border-top: 4px solid #0f172a;
+        padding-top: 36px;
+
         .resume-sheet-header {
-          text-align: center;
-          border-bottom: 1px solid #94a3b8;
-        }
-        .section-title {
-          text-align: center;
+          text-align: left;
           border-bottom: 1px solid #cbd5e1;
+          padding-bottom: 14px;
+
+          .candidate-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+          }
+          .candidate-headline {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #334155;
+          }
+          .contact-line {
+            justify-content: flex-start;
+          }
+        }
+
+        .section-title {
+          border-left: 4px solid #0f172a;
+          padding-left: 8px;
+          border-bottom: none;
+          color: #0f172a;
+          font-weight: 800;
+          font-size: 13px;
+          margin-bottom: 10px;
+        }
+
+        .experience-entry, .project-entry {
+          border-left: 2px solid #e2e8f0;
+          padding-left: 12px;
+          margin-left: 4px;
         }
       }
 
-      /* Compact */
+      /* Developer Compact (1-Page High-Density Silicon Valley Format) */
       &--compact {
-        padding: 28px 32px;
+        padding: 24px 30px;
         font-size: 11px;
-        .resume-sheet-section { margin-bottom: 12px; }
+        line-height: 1.45;
+
+        .resume-sheet-header {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+          .candidate-name { font-size: 22px; margin-bottom: 0; }
+          .candidate-headline { font-size: 12px; margin-bottom: 2px; }
+          .contact-line { font-size: 10.5px; }
+        }
+
+        .resume-sheet-section {
+          margin-bottom: 10px;
+
+          .section-title {
+            font-size: 11.5px;
+            margin-bottom: 4px;
+            padding-bottom: 2px;
+            border-bottom: 1px solid #475569;
+          }
+        }
+
+        .skills-grid-table .skill-row {
+          font-size: 10.5px;
+          .skill-cat { min-width: 140px; }
+        }
+
+        .entry-bullets {
+          font-size: 10.5px;
+          gap: 2px;
+        }
+
+        .entry-tech-badge {
+          background: #f1f5f9;
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 10px;
+        }
       }
 
       .resume-sheet-header {
