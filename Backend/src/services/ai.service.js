@@ -167,7 +167,29 @@ Difficulty: ${difficulty}.
 Include 3 focused technical questions and 2 behavioral questions.
 Ensure questions are clear, practical, and interview-ready.`
 
-    const raw = await callGemini(prompt, mockQuestionsBatchSchema)
+    const raw = await callGemini(prompt, mockQuestionsBatchSchema, "gemini-flash-lite-latest")
+    const parsed = JSON.parse(raw)
+    return parsed.questions || []
+}
+
+async function generateTailoredQuestionsFromIntro({ candidateIntro, role, company, difficulty, count = 9 }) {
+    const prompt = `You are an expert technical interviewer conducting a comprehensive multi-round interview for "${role}" at "${company || 'Tech Company'}".
+Difficulty Level: ${difficulty}
+
+The candidate just provided their self-introduction:
+"""
+${candidateIntro}
+"""
+
+Based directly on the background, projects, programming languages, libraries, and tools the candidate mentioned:
+Generate exactly ${count} tailored, progressive interview questions:
+- Question 1-2: Probe the architecture and technical decisions of the projects they explicitly mentioned in their intro.
+- Question 3-6: High-signal technical and coding scenario questions on the tech stack and core CS topics they claimed familiarity with.
+- Question 7-9: Behavioral STAR situations (e.g., handling production incidents, challenging code reviews, collaboration under tight deadlines).
+
+Ensure every question feels personalized, directly connected to their intro, and realistic for a ${role}.`
+
+    const raw = await callGemini(prompt, mockQuestionsBatchSchema, "gemini-flash-lite-latest")
     const parsed = JSON.parse(raw)
     return parsed.questions || []
 }
@@ -349,6 +371,7 @@ module.exports = {
     generateInterviewReport,
     generateMockQuestion,
     generateMockQuestionsBatch,
+    generateTailoredQuestionsFromIntro,
     evaluateMockAnswer,
     generateCodingChallenge,
     reviewCodingSolution,

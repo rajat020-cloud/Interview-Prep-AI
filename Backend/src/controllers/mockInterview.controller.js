@@ -1,42 +1,29 @@
 const mockInterviewModel = require("../models/mockInterview.model")
-const { generateMockQuestion, generateMockQuestionsBatch, evaluateMockAnswer } = require("../services/ai.service")
+const {
+    generateMockQuestion,
+    generateMockQuestionsBatch,
+    generateTailoredQuestionsFromIntro,
+    evaluateMockAnswer
+} = require("../services/ai.service")
 const notificationModel = require("../models/notification.model")
 
-const TOTAL_QUESTIONS = 5
+const TOTAL_QUESTIONS = 10
 
 /**
- * Start a new mock interview session with pre-generated questions for zero lag
+ * Start a new mock interview session:
+ * Question 1 is ALWAYS the candidate introduction.
+ * Follow-up questions (2-10) will be generated tailored to their introduction!
  */
 async function startMockInterviewController(req, res) {
     try {
-        const { role = "Software Engineer", company = "Tech Company", difficulty = "Medium", durationMinutes = 15 } = req.body
+        const { role = "Software Engineer", company = "Tech Company", difficulty = "Medium", durationMinutes = 20 } = req.body
 
-        // Generate full question suite in a single batch so transitions are instant
-        let questions = []
-        try {
-            questions = await generateMockQuestionsBatch({
-                role,
-                company,
-                difficulty,
-                count: TOTAL_QUESTIONS
-            })
-        } catch (batchErr) {
-            console.warn("Batch question generation fallback:", batchErr.message)
-            const firstQ = await generateMockQuestion({
-                role,
-                company,
-                difficulty,
-                type: "technical",
-                previousQuestions: []
-            })
-            questions = [firstQ]
+        // First question is always the introduction
+        const introQuestion = {
+            questionText: `Welcome to your interview for the ${role} position at ${company || 'our company'}. To get started, please introduce yourself, tell me about your background, the key projects you've built, and the technologies you're most confident with.`,
+            type: "behavioral",
+            difficulty: "Easy"
         }
-
-        const formattedQuestions = questions.map(q => ({
-            questionText: q.questionText,
-            type: q.type || "technical",
-            difficulty: q.difficulty || difficulty
-        }))
 
         const session = await mockInterviewModel.create({
             user: req.user.id,
@@ -46,7 +33,7 @@ async function startMockInterviewController(req, res) {
             durationMinutes,
             status: "in_progress",
             currentQuestionIndex: 0,
-            questions: formattedQuestions
+            questions: [introQuestion]
         })
 
         return res.status(201).json({
@@ -60,7 +47,9 @@ async function startMockInterviewController(req, res) {
 }
 
 /**
- * Submit answer to current question & advance session with ultra-low latency
+ * Submit answer to current question & advance session:
+ * - On Question 1 (intro), dynamically generates Questions 2-10 tailored to the candidate's introduction.
+ * - On Questions 2-10, fast 1-second evaluation and instant transition.
  */
 async function submitAnswerController(req, res) {
     try {
@@ -74,10 +63,58 @@ async function submitAnswerController(req, res) {
         const currentQ = session.questions[currentIndex]
         if (!currentQ) return res.status(400).json({ message: "Invalid question index." })
 
+        // ── Case 1: Candidate answered Question 1 (Self-Introduction) ────────
+        if (currentIndex === 0 && session.questions.length === 1) {
+            const [feedback, tailoredQuestions] = await Promise.all([
+                evaluateMockAnswer({
+                    question: currentQ.questionText,
+                    userAnswer: userAnswer || "No verbal or written answer recorded.",
+                    role: session.role,
+                    difficulty: session.difficulty
+                }),
+                generateTailoredQuestionsFromIntro({
+                    candidateIntro: userAnswer || `I am a ${session.role} with hands-on experience in full-stack development and APIs.`,
+                    role: session.role,
+                    company: session.company,
+                    difficulty: session.difficulty,
+                    count: TOTAL_QUESTIONS - 1
+                }).catch(err => {
+                    console.warn("Tailored question generation fallback:", err.message)
+                    return generateMockQuestionsBatch({
+                        role: session.role,
+                        company: session.company,
+                        difficulty: session.difficulty,
+                        count: TOTAL_QUESTIONS - 1
+                    })
+                })
+            ])
+
+            currentQ.userAnswer = userAnswer
+            currentQ.feedback = feedback
+            currentQ.answeredAt = new Date()
+
+            // Append the 9 tailored questions
+            const formatted = (tailoredQuestions || []).map(q => ({
+                questionText: q.questionText,
+                type: q.type || "technical",
+                difficulty: q.difficulty || session.difficulty
+            }))
+
+            session.questions.push(...formatted)
+            session.currentQuestionIndex = 1
+
+            await session.save()
+
+            return res.status(200).json({
+                message: "Introduction evaluated and tailored interview questions prepared",
+                session
+            })
+        }
+
+        // ── Case 2: Subsequent Questions (2 through 10) ──────────────────────
         const hasNextPreloaded = currentIndex + 1 < session.questions.length
         const isFinalQuestion = currentIndex + 1 >= TOTAL_QUESTIONS
 
-        // If next question is already preloaded, we only evaluate current answer (1 fast API call)
         if (hasNextPreloaded || isFinalQuestion) {
             const feedback = await evaluateMockAnswer({
                 question: currentQ.questionText,
@@ -96,7 +133,7 @@ async function submitAnswerController(req, res) {
                 session.status = "completed"
                 const sum = session.questions.reduce((acc, q) => acc + (q.feedback?.score || 0), 0)
                 session.overallScore = Math.round(sum / session.questions.length)
-                session.summary = `Completed ${session.questions.length}-question mock interview for ${session.role} with overall score ${session.overallScore}%.`
+                session.summary = `Completed full ${session.questions.length}-question mock interview for ${session.role} with overall score ${session.overallScore}%.`
 
                 await notificationModel.create({
                     user: req.user.id,
@@ -107,7 +144,7 @@ async function submitAnswerController(req, res) {
                 })
             }
         } else {
-            // Fallback for legacy sessions: Run evaluation and next question generation concurrently
+            // Fallback for older sessions
             const nextType = session.questions.length % 2 === 0 ? "technical" : "behavioral"
             const prevTexts = session.questions.map(q => q.questionText)
 

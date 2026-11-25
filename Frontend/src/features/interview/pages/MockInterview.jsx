@@ -44,6 +44,7 @@ const MockInterview = () => {
     const userVideoRef = useRef(null)
     const mediaStreamRef = useRef(null)
     const recognitionRef = useRef(null)
+    const baseAnswerRef = useRef('')
 
     // Countdown Timer
     useEffect(() => {
@@ -127,26 +128,41 @@ const MockInterview = () => {
         return () => stopSpeaking()
     }, [session?.currentQuestionIndex, session?.status])
 
-    // Speech-to-text recognition setup
+    // Speech-to-text recognition setup with ZERO duplicate repetitions
     useEffect(() => {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-            recognitionRef.current = new SpeechRecognition()
-            recognitionRef.current.continuous = true
-            recognitionRef.current.interimResults = true
+            const recognition = new SpeechRecognition()
+            recognition.continuous = true
+            recognition.interimResults = true
+            recognition.lang = 'en-US'
 
-            recognitionRef.current.onresult = (event) => {
-                let transcript = ''
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript
+            recognition.onresult = (event) => {
+                let finalTranscript = ''
+                let interimTranscript = ''
+                for (let i = 0; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' '
+                    } else {
+                        interimTranscript += transcript
+                    }
                 }
-                setUserAnswer(prev => prev + ' ' + transcript)
+                const base = baseAnswerRef.current ? baseAnswerRef.current.trim() + ' ' : ''
+                const combined = (base + finalTranscript + interimTranscript).trim()
+                setUserAnswer(combined)
             }
 
-            recognitionRef.current.onerror = (e) => {
+            recognition.onerror = (e) => {
                 console.warn("Speech recognition error:", e.error)
                 setIsRecording(false)
             }
+
+            recognition.onend = () => {
+                setIsRecording(false)
+            }
+
+            recognitionRef.current = recognition
         }
     }, [])
 
@@ -159,8 +175,13 @@ const MockInterview = () => {
             recognitionRef.current.stop()
             setIsRecording(false)
         } else {
-            recognitionRef.current.start()
-            setIsRecording(true)
+            baseAnswerRef.current = userAnswer
+            try {
+                recognitionRef.current.start()
+                setIsRecording(true)
+            } catch (err) {
+                console.warn("Recognition start issue:", err.message)
+            }
         }
     }
 
@@ -227,7 +248,7 @@ const MockInterview = () => {
                             <span className="live-dot" /> LIVE
                         </span>
                         <span className="q-progress-pill">
-                            Question {session.currentQuestionIndex + 1} of {session.questions.length}
+                            Question {session.currentQuestionIndex + 1} of {Math.max(10, session.questions.length)}
                         </span>
                         <span className="timer-pill">
                             <Clock size={15} />
@@ -412,6 +433,9 @@ const MockInterview = () => {
                     <div className="question-answer-panel">
                         <div className="active-question-card">
                             <div className="q-tags">
+                                {session.currentQuestionIndex === 0 && (
+                                    <span className="badge" style={{ background: '#4338ca', color: '#fff', fontWeight: 'bold' }}>INTRO ROUND</span>
+                                )}
                                 <span className="badge badge-tech">{currentQ.type.toUpperCase()}</span>
                                 <span className="badge badge-difficulty">{currentQ.difficulty || difficulty}</span>
                                 <button
@@ -455,13 +479,21 @@ const MockInterview = () => {
                             <textarea
                                 className="textarea answer-textarea"
                                 rows={8}
-                                placeholder="Type your answer here or click the microphone to speak your response aloud..."
+                                placeholder={session.currentQuestionIndex === 0
+                                    ? "Introduce yourself: share your technical background, the main projects you've built, and the tech stack you specialize in. Your follow-up questions will be dynamically tailored to your intro!"
+                                    : "Type your answer here or click the microphone to speak your response aloud..."}
                                 value={userAnswer}
                                 onChange={e => setUserAnswer(e.target.value)}
                             />
                             <div className="answer-submit-row">
                                 <span className={`recording-hint ${submitting ? 'recording-hint--evaluating' : ''}`}>
-                                    {submitting ? "⚡ AI is evaluating your response..." : isRecording ? "🔴 Listening... Speak clearly into your mic" : "Type your response or use voice dictation"}
+                                    {submitting
+                                        ? (session.currentQuestionIndex === 0
+                                            ? "⚡ Analyzing intro & tailoring 9 questions..."
+                                            : "⚡ AI is evaluating your response...")
+                                        : isRecording
+                                            ? "🔴 Listening... Speak clearly into your mic"
+                                            : "Type your response or use voice dictation"}
                                 </span>
                                 <button
                                     onClick={handleSubmitAnswer}
@@ -476,7 +508,7 @@ const MockInterview = () => {
                                     ) : (
                                         <>
                                             <Send size={16} />
-                                            <span>Submit Answer</span>
+                                            <span>{session.currentQuestionIndex === 0 ? "Submit Intro & Start Interview" : "Submit Answer"}</span>
                                         </>
                                     )}
                                 </button>
