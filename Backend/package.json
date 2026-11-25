@@ -4,6 +4,7 @@
   "description": "Interview Prep AI Backend API",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'Backend ready for serverless deployment'",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon server.js"
