@@ -14,6 +14,7 @@ const adminController = require("../controllers/admin.controller");
 const adminAuthLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 20,
+    validate: { xForwardedForHeader: false, default: false },
     message: { message: "Too many admin login attempts. Please try again after 15 minutes." }
 });
 

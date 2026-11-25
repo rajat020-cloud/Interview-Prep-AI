@@ -1,8 +1,8 @@
 {
-  "name": "yt-genai",
+  "name": "interview-prep-ai-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Interview Prep AI Backend API",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",

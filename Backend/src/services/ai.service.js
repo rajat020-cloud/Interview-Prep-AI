@@ -1,8 +1,15 @@
 const { GoogleGenAI } = require("@google/genai")
 const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
-const puppeteer = require("puppeteer")
 const fs = require('fs')
+
+// Lazy load puppeteer to avoid crashing Vercel Serverless Functions
+let puppeteer = null
+try {
+    puppeteer = require("puppeteer")
+} catch (e) {
+    // Expected in serverless environments
+}
 
 // Initialize Google GenAI client if key exists
 const apiKey = process.env.GOOGLE_GENAI_API_KEY || ""
@@ -369,6 +376,14 @@ Provide a clear, encouraging, and deeply practical response. If asked for code, 
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function generatePdfFromHtml(htmlContent) {
+    if (!puppeteer) {
+        try {
+            puppeteer = require("puppeteer")
+        } catch (e) {
+            throw new Error("Serverless PDF compilation is restricted in this cloud environment. Please export directly using the browser print / PDF button.")
+        }
+    }
+
     const possiblePaths = [
         'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',

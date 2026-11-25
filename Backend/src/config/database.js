@@ -7,6 +7,11 @@ if (!cached) {
 }
 
 async function connectToDB() {
+    if (!process.env.MONGO_URI) {
+        console.warn("MONGO_URI is missing or not yet configured in environment.")
+        return null
+    }
+
     if (mongoose.connection.readyState === 1) {
         return mongoose.connection
     }
